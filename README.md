@@ -156,10 +156,8 @@ curl -X PUT --header "Content-Type: application/json" -d "{\"id\":86610328619098
 ```
 
 ##Running Unittests
-Note: unit tests will be added at a later date.
 
 ```
 pip install mock
-python -m ../test/test_app.py
-python -m ../test/test_event_utils.py
+python test/test_event_utils.py
 ```
