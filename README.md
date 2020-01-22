@@ -1,6 +1,6 @@
 # Events platform
 
-This platform provides access to data of the latest sports events. It allow for the addition and modification of sports events.
+This platform provides access to the data of the latest sports events. It allows for the addition and modification of sports events.
 
 ## Getting started
 These instructions will get a copy of the project up and running on your local machine.
@@ -25,7 +25,7 @@ pip install redis-py
 For more details see <https://pypi.org/project/redis/>
 
 
-3. tornado Python package is installed.
+3. _tornado_ Python package is installed.
 ```
 pip install redis.py
 ```
@@ -44,9 +44,122 @@ redis-server
 python app/app.py
 ```
 
-## Accessing the API
-The following endpoints are exposed.:
-../api/match/
+This will run on localhost and port 8080 by default.
 
-##Running the Unittests
-blah
+## Accessing the API
+The following endpoints are exposed:
+
+http://<server:port>/api/match/
+
+##Request types:
+The following request types have been implemented:
+
+GET | POST | PUT
+
+##Example requests:
+GET request with _resource id_:
+
+```
+"curl -v http://localhost:8080/api/match/1"
+```
+
+Get request with _name_ parameter:
+```
+curl -v "http://localhost:8080/api/match/?name=Fleetwood%20vs%20Day%20vs%20Rose"
+```
+
+Get request with _sport_ and _ordering_ parameters:
+
+```
+curl -v "http://localhost:8080/api/match/?sport=hurling&ordering=startTime"
+```
+
+Sample new event message:
+```
+{
+  "id": 8661032861909884001,
+  "message_type": "NewEvent",
+  "event": {
+    "id": 1,
+    "name": "Cork vs Galway",
+    "startTime": "2020-04-19 15:35:00",
+    "sport": {
+      "id": 221,
+      "name": "Hurling"
+    },
+    "markets": [
+      {
+        "id": 385086549360973400,
+        "name": "Winner",
+        "selections": [
+          {
+            "id": 8243901714083343000,
+            "name": "Cork",
+            "odds": 1.01
+          },
+          {
+            "id": 5737666888266680000,
+            "name": "Galway",
+            "odds": 1.01
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+POST request to create a new event:
+```
+curl --header "Content-Type: application/json" -d "{\"id\":8661032861909884001,\"message_type\":\"NewEvent\",\"event\":{\"id\":13,\"name\":\"Cork vs Galway\",\"startTime\":\"2020-04-19 15:35:00\",\"sport\":{\"id\":221,\"name\":\"Hurling\"},\"markets\":[{\"id\":385086549360973400,\"name\":\"Winner\",\"selections\":[{\"id\":8243901714083343000,\"name\":\"Cork\",\"odds\":1.01},{\"id\":5737666888266680000,\"name\":\"Galway\",\"odds\":1.01}]}]}}" http://localhost:8080/api/match/
+```
+
+Sample update odds message:
+```
+{
+  "id": 8661032861909884001,
+  "message_type": "UpdateOdds",
+  "event": {
+    "id": 1,
+    "name": "Cork vs Galway",
+    "startTime": "2020-04-19 15:35:00",
+    "sport": {
+      "id": 221,
+      "name": "Hurling"
+    },
+    "markets": [
+      {
+        "id": 385086549360973400,
+        "name": "Winner",
+        "selections": [
+          {
+            "id": 8243901714083343000,
+            "name": "Cork",
+            "odds": 1.04
+          },
+          {
+            "id": 5737666888266680000,
+            "name": "Galway",
+            "odds": 1.31
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+PUT request to update odds:
+
+```
+curl -X PUT --header "Content-Type: application/json" -d "{\"id\":8661032861909884001,\"message_type\":\"UpdateOdds\",\"event\":{\"id\":13,\"name\":\"Cork vs Galway\",\"startTime\":\"2020-04-19 15:35:00\",\"sport\":{\"id\":221,\"name\":\"Hurling\"},\"markets\":[{\"id\":385086549360973400,\"name\":\"Winner\",\"selections\":[{\"id\":8243901714083343000,\"name\":\"Cork\",\"odds\":1.04},{\"id\":5737666888266680000,\"name\":\"Galway\",\"odds\":1.31}]}]}}" http://localhost:8080/api/match/
+```
+
+##Running Unittests
+Note: unit tests will be added at a later date.
+
+```
+pip install mock
+python -m ../test/test_app.py
+python -m ../test/test_event_utils.py
+```

@@ -1,3 +1,8 @@
+"""
+This script provides a Rest API allowing for the access
+and modification of event data.
+"""
+
 from tornado.web import Application, RequestHandler
 from tornado.ioloop import IOLoop
 import json
@@ -21,7 +26,8 @@ class EventHandler(RequestHandler):
                 result = r.mget(id)
                 self.write(json.loads(result[0]))
             else:
-                self.write("TODO: ID does not exist")
+                self.set_status(404)
+                self.write("ID not found")
 
         elif self.get_argument("name", None):
             match_name = self.get_argument("name").lower()
